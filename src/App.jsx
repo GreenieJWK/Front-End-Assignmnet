@@ -2,29 +2,33 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 const APILink = "https://awf-api.lvl99.dev";
-var Token = null;
+
 function App() {
   const [token, setToken] = useState(null);
   const [forums, setForums] = useState([]);
 
-  // Login on mount
+  // on page open do:
   useEffect(() => {
     loginToAPI();
   }, []);
 
-  async function getForums() {
+  async function getForums(currentToken) 
+  {
     const response = await fetch(APILink + '/forums', {
       headers: {
-        Authorization: `Bearer ${Token}`,
+        Authorization: `Bearer ${currentToken}`,
       },
     });
     const forums = await response.json();
     setForums(forums)
+    
     console.log(forums.length);
   }
 
-  // function defenitions
-  async function loginToAPI() {
+ 
+  async function loginToAPI() 
+  {
+   
     const response = await fetch(APILink + "/auth/login", {
       method: "POST",
       headers: {
@@ -37,23 +41,35 @@ function App() {
     });
 
     const data = await response.json();
-    Token = data.access_token;
-    console.log("Login Successful");
-    getForums();
+    setToken(data.access_token);
+     
+    getForums(data.access_token);
+  }
+
+  function favorite()
+  {
+    console.log("favorite");
+  }
+
+  function unfavorite()
+  {
+   console.log("unfavorite");
   }
 
   return (
     <>
       <div id="Banner" className="Banner">
-        <button onClick={getForums}>Get Forums</button>
         <h2>Jack Kaufman</h2>
+        <button className="FavoritePageButton" onClick={getForums}>Favorites Page</button>
       </div>
 
       <div id="credditPosts" className="credditPosts">
         {forums.map(forum => (
-          <div key={forum.slug}>
+          <div className="Posts" key={forum.slug}>
             <h3>{forum.slug}</h3>
             <p>{forum.description}</p>
+            <button className="FavoritesButtons" onClick={favorite}>Favorite</button>
+            <button className="FavoritesButtons" onClick={unfavorite}>Unfavorite</button>
           </div>
         ))}
       </div>
