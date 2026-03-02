@@ -29,6 +29,7 @@ function App() {
    
     if (token == null || tokenExpirey == null || Date.now() > tokenExpirey) {
 
+      
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpirey");
       const response = await fetch(APILink + "/auth/login", {
