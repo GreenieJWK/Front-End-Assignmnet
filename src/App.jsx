@@ -20,16 +20,14 @@ function App() {
     });
     const forums = await response.json();
     setForums(forums);
-
-    console.log(forums.length);
   }
 
   async function loginToAPI() {
 
     var token = localStorage.getItem("token");
-    var tokenExpirey = Number(localStorage.getItem("tokenExpirey"));
-
-    if (token == null || tokenExpirey == null) {
+    var tokenExpirey = localStorage.getItem("tokenExpirey");
+   
+    if (token == null || tokenExpirey == null || Date.now() > tokenExpirey) {
 
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpirey");
@@ -48,19 +46,18 @@ function App() {
       setToken(data.access_token);
 
       var expiry = Date.now() + (40 * 60 * 1000); 
+     
       localStorage.setItem('token', data.access_token);
-      localStorage.setItem('tokenExpiry', expiry);
+      localStorage.setItem('tokenExpirey', expiry);
 
       getForums(data.access_token);
-      console.log("GOT FROM API");
-      console.log(localStorage.getItem("tokenExpirey"));
+     
     }
 
     else
     {
       setToken(token);
       getForums(localStorage.getItem("token"));
-      console.log("GOT FROM LOCALSTORAGE");
     }
 
   }
