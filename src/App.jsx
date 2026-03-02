@@ -29,7 +29,7 @@ function App() {
    
     if (token == null || tokenExpirey == null || Date.now() > tokenExpirey) {
 
-      
+
       localStorage.removeItem("token");
       localStorage.removeItem("tokenExpirey");
       const response = await fetch(APILink + "/auth/login", {
@@ -43,9 +43,11 @@ function App() {
         }),
       });
 
+
       const data = await response.json();
       setToken(data.access_token);
 
+      
       var expiry = Date.now() + (40 * 60 * 1000); 
      
       localStorage.setItem('token', data.access_token);
